@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>PasteWithHierarchy</AssemblyName>
+    <OutputPath>./bin/Release/</OutputPath>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Version>1.0.0</Version> <!-- Semantic version -->
+    <AssemblyVersion>1.0.0.0</AssemblyVersion> <!-- Runtime binding -->
+    <FileVersion>1.0.0.0</FileVersion> <!-- File information -->
+    <InformationalVersion>1.0.0-stable</InformationalVersion> <!-- Optional "1.2.0-beta" -->
+    <Description>Free Tool To Paste Files From Clipboard With Source Hierarchy</Description>
+    <Company>Samuel James</Company>
+    <Authors>Samuel James</Authors>
+    <Copyright>©2024. All rights reserved. Free to use</Copyright>
+  </PropertyGroup>
+</Project>
