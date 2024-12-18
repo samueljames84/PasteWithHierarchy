@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -31,6 +32,7 @@ class Program
                {
                     var fileDropList = Clipboard.GetFileDropList().Cast<string>().ToList();
                     string commonPath = GetCommonPath(fileDropList);
+                    List<string> copiedFiles = new List<string>();
 
                     foreach (string sourcePath in fileDropList)
                     {
@@ -43,10 +45,12 @@ class Program
                          {
                               Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
                               File.Copy(sourcePath, destinationPath, true);
+                              copiedFiles.Add(relativePath);
                          }
                          else if (Directory.Exists(sourcePath))
                          {
                               CopyDirectory(sourcePath, destinationPath);
+                              copiedFiles.Add(relativePath);
                          }
                     }
                     catch (Exception ex)
@@ -56,6 +60,7 @@ class Program
                     }
 
                     Console.WriteLine("Files pasted successfully.");
+                    ShowTooltip(copiedFiles.ToArray());
                }
                else
                {
@@ -108,6 +113,57 @@ class Program
                string destDirectory = Path.Combine(destinationDir, Path.GetFileName(directory));
                CopyDirectory(directory, destDirectory);
           }
+     }
+
+     static void ShowTooltip(string[] filePaths)
+     {
+          Application.EnableVisualStyles();
+          // Create tooltip form
+          Form tooltipForm = new Form
+          {
+               FormBorderStyle = FormBorderStyle.None,
+               ShowInTaskbar = false,
+               StartPosition = FormStartPosition.Manual,
+               Size = new Size(Screen.PrimaryScreen.WorkingArea.Width / 3, Screen.PrimaryScreen.WorkingArea.Height / 8),
+               BackColor = Color.Black,
+               Opacity = 0.9
+          };
+
+          // Position the form at bottom right of screen
+          tooltipForm.Location = new Point(
+               Screen.PrimaryScreen.WorkingArea.Width - tooltipForm.Width - 5,
+               Screen.PrimaryScreen.WorkingArea.Height - tooltipForm.Height - 5
+          );
+
+          // Create label for file paths
+          Label label = new Label
+          {
+               Dock = DockStyle.Fill,
+               Text = $"{filePaths.Length} Copied files:\n" + string.Join("\n", filePaths),
+               ForeColor = Color.White,
+               TextAlign = ContentAlignment.TopLeft,
+               Font = new Font("Consolas", 10)
+          };
+
+          tooltipForm.Controls.Add(label);
+
+          // Show the form
+          tooltipForm.Show();
+
+          // Close the form after 500ms
+          System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer
+          {
+               Interval = 1000
+          };
+          timer.Tick += (sender, e) =>
+          {
+               tooltipForm.Close();
+               timer.Stop();
+          };
+          timer.Start();
+
+          // Run the message loop to ensure the form displays
+          Application.Run(tooltipForm);
      }
 }
 }
